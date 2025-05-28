@@ -48,17 +48,14 @@ public class MapEngine {
       String input = Utils.scanner.nextLine();
       String formattedName = Utils.capitalizeFirstLetterOfEachWord(input);
 
+      // Exception handling for country not found
       try {
         Country country = getCountryOrThrow(formattedName);
         String continent = country.getContinent();
         int fuelCost = country.getFuelCost();
         List<String> neighbours = new java.util.ArrayList<>(graph.getNeighbours(formattedName));
         MessageCli.COUNTRY_INFO.printMessage(
-            formattedName,
-            continent,
-            String.valueOf(fuelCost),
-            neighbours.toString()
-        );
+            formattedName, continent, String.valueOf(fuelCost), neighbours.toString());
         break;
       } catch (CountryNotFoundException e) {
         MessageCli.INVALID_COUNTRY.printMessage(formattedName);
@@ -66,6 +63,7 @@ public class MapEngine {
     }
   }
 
+  // ** This method retrieves a country by its name or throws an exception if not found. */
   public Country getCountryOrThrow(String countryName) throws CountryNotFoundException {
     if (!graph.hasCountry(countryName)) {
       throw new CountryNotFoundException(countryName);
@@ -74,5 +72,47 @@ public class MapEngine {
   }
 
   /** this method is invoked when the user run the command route. */
-  public void showRoute() {}
+  public void showRoute() {
+
+    // SOURCE LOCATION ==
+    String formattedSource ;
+    while (true) {
+
+      MessageCli.INSERT_SOURCE.printMessage();
+      String userinputSource = Utils.scanner.nextLine();
+      formattedSource = Utils.capitalizeFirstLetterOfEachWord(userinputSource);
+
+      try {
+        getCountryOrThrow(formattedSource);
+        break;
+
+      } catch (CountryNotFoundException e) {
+        MessageCli.INVALID_COUNTRY.printMessage(formattedSource);
+      }
+    }
+
+    // DESTINATION LOCATION ==
+    String formattedDestination;
+    while (true) {
+      MessageCli.INSERT_DESTINATION.printMessage();
+      String userinputDestination = Utils.scanner.nextLine();
+      formattedDestination = Utils.capitalizeFirstLetterOfEachWord(userinputDestination);
+
+      try {
+        getCountryOrThrow(formattedDestination);
+        break;
+
+      } catch (CountryNotFoundException e) {
+        MessageCli.INVALID_COUNTRY.printMessage(formattedDestination);
+      }
+    }
+    //Checking if source and destination are the same
+    if(formattedSource.equals(formattedDestination)) {
+      MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
+      return;
+    }
+
+
+
+  }
 }

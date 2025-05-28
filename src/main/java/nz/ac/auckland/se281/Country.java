@@ -4,8 +4,8 @@ public class Country {
   private String name;
   private String continent;
   private int fuelCost;
-  
-public Country(String name, String continent, int fuelCost) {
+
+  public Country(String name, String continent, int fuelCost) {
     this.name = name;
     this.continent = continent;
     this.fuelCost = fuelCost;
