@@ -113,6 +113,14 @@ public class MapEngine {
     }
 
 
+    // FINDING THE FASTEST ROUTE FROMS SOURCE TO DESTINATION ==
+    List<String> pathway = graph.findShortestPath(formattedSource, formattedDestination);
+    if (pathway.isEmpty()) {
+      MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
+      return;
+    }
 
+    // Show the pathway found 
+    MessageCli.ROUTE_INFO.printMessage(pathway.toString());
   }
 }
