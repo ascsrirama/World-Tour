@@ -1,6 +1,9 @@
 package nz.ac.auckland.se281;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /** This class is the main entry point. */
 public class MapEngine {
@@ -75,7 +78,7 @@ public class MapEngine {
   public void showRoute() {
 
     // SOURCE LOCATION ==
-    String formattedSource ;
+    String formattedSource;
     while (true) {
 
       MessageCli.INSERT_SOURCE.printMessage();
@@ -106,12 +109,11 @@ public class MapEngine {
         MessageCli.INVALID_COUNTRY.printMessage(formattedDestination);
       }
     }
-    //Checking if source and destination are the same
-    if(formattedSource.equals(formattedDestination)) {
+    // Checking if source and destination are the same
+    if (formattedSource.equals(formattedDestination)) {
       MessageCli.NO_CROSSBORDER_TRAVEL.printMessage();
       return;
     }
-
 
     // FINDING THE FASTEST ROUTE FROMS SOURCE TO DESTINATION ==
     List<String> pathway = graph.findShortestPath(formattedSource, formattedDestination);
@@ -120,7 +122,56 @@ public class MapEngine {
       return;
     }
 
-    // Show the pathway found 
+    // Show the pathway found
     MessageCli.ROUTE_INFO.printMessage(pathway.toString());
+
+    // Show the fuel consumption
+    int totalFuelCost = 0;
+    for (int i = 1; i < pathway.size() - 1; i++) {
+      String countryName = pathway.get(i);
+      Country country = graph.getCountry(countryName);
+      totalFuelCost += country.getFuelCost();
+    }
+    MessageCli.FUEL_INFO.printMessage(String.valueOf(totalFuelCost));
+
+    // Show the continents visited
+    List<String> continentsOrder = new ArrayList<>();
+    Map<String, Integer> continentFuelUse = new HashMap<>();
+
+    for (int i = 0; i < pathway.size(); i++) {
+      String countryName = pathway.get(i);
+      Country country = graph.getCountry(countryName);
+      String continent = country.getContinent();
+      if (!continentsOrder.contains(continent)) {
+        continentsOrder.add(continent);
+        continentFuelUse.put(continent, 0); // Initialize with 0
+      }
+
+      if (i != 0 && i != pathway.size() - 1) {
+
+        int fuelCost = country.getFuelCost();
+        continentFuelUse.put(continent, continentFuelUse.getOrDefault(continent, 0) + fuelCost);
+      }
+    }
+    List<String> continentStrings = new ArrayList<>();
+    for (String continent : continentsOrder) {
+      int fuel = continentFuelUse.get(continent);
+      continentStrings.add(continent + " (" + fuel + ")");
+    }
+
+    // Show continents visited
+    MessageCli.CONTINENT_INFO.printMessage(continentStrings.toString());
+
+    String mostFuelContinent = "";
+    int maxFuel = 0;
+    for (String continent : continentsOrder) {
+      int fuel = continentFuelUse.get(continent);
+      if (fuel > maxFuel) {
+        maxFuel = fuel;
+        mostFuelContinent = continent;
+      }
+    }
+
+    MessageCli.FUEL_CONTINENT_INFO.printMessage(mostFuelContinent + " (" + maxFuel + ")");
   }
 }
