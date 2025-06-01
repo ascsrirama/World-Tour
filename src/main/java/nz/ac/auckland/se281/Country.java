@@ -22,9 +22,4 @@ public class Country {
   public int getFuelCost() {
     return fuelCost;
   }
-
-  // @Override
-  // public String toString() {
-  //   return name + " => continent: " + continent + ", fuel cost: " + fuelCost;
-  // }
 }
