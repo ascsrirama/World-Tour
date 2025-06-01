@@ -56,7 +56,7 @@ public class MapEngine {
         Country country = getCountryOrThrow(formattedName);
         String continent = country.getContinent();
         int fuelCost = country.getFuelCost();
-        List<String> neighbours = new java.util.ArrayList<>(graph.getNeighbours(formattedName));
+        List<String> neighbours = new ArrayList<>(graph.getNeighbours(formattedName));
 
         MessageCli.COUNTRY_INFO.printMessage(
             formattedName, continent, String.valueOf(fuelCost), neighbours.toString());
