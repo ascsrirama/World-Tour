@@ -163,7 +163,7 @@ public class MapEngine {
     MessageCli.CONTINENT_INFO.printMessage(continentStrings.toString());
 
     String mostFuelContinent = "";
-    int maxFuel = 0;
+    int maxFuel = -1;
     for (String continent : continentsOrder) {
       int fuel = continentFuelUse.get(continent);
       if (fuel > maxFuel) {
